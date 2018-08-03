@@ -1,0 +1,10 @@
+C:\Users\arthu\source\repos\99Problems\Solutions\bin\Debug\Solutions.XML
+C:\Users\arthu\source\repos\99Problems\Solutions\bin\Debug\Solutions.dll
+C:\Users\arthu\source\repos\99Problems\Solutions\bin\Debug\Solutions.pdb
+C:\Users\arthu\source\repos\99Problems\Solutions\bin\Debug\FSharp.Core.dll
+C:\Users\arthu\source\repos\99Problems\Solutions\bin\Debug\System.ValueTuple.dll
+C:\Users\arthu\source\repos\99Problems\Solutions\bin\Debug\FSharp.Core.xml
+C:\Users\arthu\source\repos\99Problems\Solutions\obj\Debug\Solutions.fsprojAssemblyReference.cache
+C:\Users\arthu\source\repos\99Problems\Solutions\obj\Debug\Solutions.fsproj.CopyComplete
+C:\Users\arthu\source\repos\99Problems\Solutions\obj\Debug\Solutions.dll
+C:\Users\arthu\source\repos\99Problems\Solutions\obj\Debug\Solutions.pdb

@@ -51,11 +51,12 @@ module Arithmetic =
                 |> Math.Ceiling
                 |> int
             let rec getFactor (j: int): int option =
-                match j with
-                | highest when i % highest = 0 -> Some highest
-                | highest when i % highest <> 0 -> None
-                | j when i % j = 0 -> Some j
-                | j when i % j <> 0 -> getFactor (j + 1)
+                match i % j = 0 with
+                | true -> Some j
+                | false ->
+                    match j = highest with
+                    | true -> None
+                    | false -> getFactor (j + 1)
             let factor = getFactor 2
             match factor with
             | None -> i::[]
@@ -73,7 +74,9 @@ module Arithmetic =
     //38
     let timeit (unaryFunction: 'a -> 'b) (parameter: 'a): float =
         let startDate: DateTime = DateTime.Now
-        let result: 'b = unaryFunction parameter
+        parameter
+        |> unaryFunction
+        |> ignore
         let endDate: DateTime = DateTime.Now
         (endDate - startDate).TotalMilliseconds
 

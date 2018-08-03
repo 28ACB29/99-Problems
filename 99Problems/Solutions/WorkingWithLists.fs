@@ -200,7 +200,7 @@ module WorkingWithLists =
 
     //23
     let rec rand_select (genericList: 'a list) (taken: int): 'a list =
-        let index = (new Random()).Next(genericList.Length)
+        let index = (Random()).Next(genericList.Length)
         match taken with
         | 0 -> []
         | _ -> genericList.[index]::(rand_select (remove_at index genericList) (taken - 1))
