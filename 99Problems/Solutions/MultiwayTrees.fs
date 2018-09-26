@@ -35,5 +35,7 @@ module MultiwayTrees =
             |> String.concat " "
         match tree with
         | T(node: 'a, []) -> node.ToString()
-        | T(node: 'a, children: 'a mult_tree list) -> [|"("; node.ToString(); (flatten children); ")"|] |> String.concat ""
+        | T(node: 'a, children: 'a mult_tree list) ->
+            [|"("; node.ToString(); (flatten children); ")"|]
+            |> String.concat ""
 

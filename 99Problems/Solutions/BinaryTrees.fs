@@ -8,6 +8,8 @@ module BinaryTrees =
         | Empty
         | Node of 'a * 'a binary_tree * 'a binary_tree
 
+    let cons (head: 'a) (tail: 'a list) = head::tail
+
     let create_trees (leftList: string binary_tree list) (rightList: string binary_tree list) (currentList: string binary_tree list): string binary_tree list =
         List.fold (fun (fullList: string binary_tree list) (leftTree: string binary_tree) -> List.fold (fun (accumulator: string binary_tree list) (rightTree: string binary_tree) -> Node("x", leftTree, rightTree)::accumulator) fullList rightList) currentList leftList
 
@@ -23,9 +25,9 @@ module BinaryTrees =
             let treeList: string binary_tree list = cbal_tree ((n_odd - 1) / 2)
             []
             |> create_trees treeList treeList
-        match n with
-        | n when n % 2 = 0 -> create_trees_even n
-        | n when n % 2 = 1 -> create_trees_odd n
+        match n % 2 with
+        | 0 -> create_trees_even n
+        | 1 -> create_trees_odd n
         | _ -> []
 
     //56
@@ -40,13 +42,13 @@ module BinaryTrees =
         | Node(_, left: 'a binary_tree, right: 'a binary_tree) -> is_symmetric left right
 
     //57
-    let construct (integers: int list): int binary_tree =
-        let rec insert (number: int) (tree: int binary_tree) =
+    let construct (integers: 'a list): 'a binary_tree =
+        let rec insert (number: 'a) (tree: 'a binary_tree) =
             match number, tree with
             | number, Empty -> Node(number, Empty, Empty)
-            | number, Node(value: int, _, _) when number = value -> tree
-            | number, Node(value: int, left: int binary_tree, right: int binary_tree) when number < value -> Node(value, insert number left, right)
-            | number, Node(value: int, left: int binary_tree, right: int binary_tree) when number > value -> Node(value, left, insert number right)
+            | number, Node(value: 'a, _, _) when number = value -> tree
+            | number, Node(value: 'a, left: 'a binary_tree, right: 'a binary_tree) when number < value -> Node(value, insert number left, right)
+            | number, Node(value: 'a, left: 'a binary_tree, right: 'a binary_tree) when number > value -> Node(value, left, insert number right)
             | _ -> Empty
         List.fold (fun accumulator element -> insert element accumulator) Empty integers
 
@@ -82,17 +84,24 @@ module BinaryTrees =
         let rec leaves_internal (internalTree: 'a binary_tree) (currentList: 'a list): 'a list =
             match internalTree with
             | Node(value: 'a, Empty, Empty) -> value::[]
-            | Node(_, left: 'a binary_tree, right: 'a binary_tree) -> leaves_internal left (leaves_internal right currentList)
+            | Node(_, left: 'a binary_tree, right: 'a binary_tree) ->
+                currentList
+                |> leaves_internal right
+                |> leaves_internal left
             | _ -> []
         match tree with
         | Empty -> []
         | _ -> leaves_internal tree []
 
     //62
-    let rec internals (tree: 'a binary_tree): 'a list =
+    let internals (tree: 'a binary_tree): 'a list =
         let rec internals_internal (internalTree: 'a binary_tree) (currentList: 'a list): 'a list =
             match internalTree with
-            | Node(value : 'a, left: 'a binary_tree, right: 'a binary_tree) when left <> Empty && right <> Empty -> internals_internal left (value::(internals_internal right currentList))
+            | Node(value : 'a, left: 'a binary_tree, right: 'a binary_tree) when left <> Empty && right <> Empty ->
+                currentList
+                |> internals_internal right
+                |> cons value
+                |> internals_internal left
             | _ -> []
         match tree with
         | Node(_, left: 'a binary_tree, right: 'a binary_tree) when left <> Empty && right <> Empty -> internals_internal tree []
@@ -110,35 +119,49 @@ module BinaryTrees =
         let rec string_of_tree_internal (tree: 'a binary_tree): string =
             match tree with
             | Empty -> ""
-            | Node(value: 'a, left: 'a binary_tree, right: 'a binary_tree) -> [|value.ToString(); "("; string_of_tree_internal left; ","; string_of_tree_internal right; ")"|] |> String.concat ""
+            | Node(value: 'a, left: 'a binary_tree, right: 'a binary_tree) ->
+                [|value.ToString(); "("; string_of_tree_internal left; ","; string_of_tree_internal right; ")"|]
+                |> String.concat ""
         string_of_tree_internal tree
 
     //68
-    let rec preorder (tree: 'a binary_tree): 'a list =
+    let preorder (tree: 'a binary_tree): 'a list =
         let rec preorder_internal (internalTree: 'a binary_tree) (currentList: 'a list): 'a list =
             match internalTree with
             | Empty -> []
-            | Node(value : 'a, left: 'a binary_tree, right: 'a binary_tree) -> value::(preorder_internal left (preorder_internal right currentList))
+            | Node(value : 'a, left: 'a binary_tree, right: 'a binary_tree) ->
+                currentList
+                |> preorder_internal right
+                |> preorder_internal left
+                |> cons value
         match tree with
         | Empty -> []
         | Node(_, _, _) -> preorder_internal tree []
 
     //68
-    let rec inorder (tree: 'a binary_tree): 'a list =
+    let inorder (tree: 'a binary_tree): 'a list =
         let rec inorder_internal (internalTree: 'a binary_tree) (currentList: 'a list): 'a list =
             match internalTree with
             | Empty -> []
-            | Node(value : 'a, left: 'a binary_tree, right: 'a binary_tree) -> inorder_internal left (value::(inorder_internal right currentList))
+            | Node(value : 'a, left: 'a binary_tree, right: 'a binary_tree) ->
+                currentList
+                |> inorder_internal right 
+                |> cons value
+                |> inorder_internal left
         match tree with
         | Empty -> []
         | Node(_, _, _) -> inorder_internal tree []
 
     //68
-    let rec postorder (tree: 'a binary_tree): 'a list =
+    let postorder (tree: 'a binary_tree): 'a list =
         let rec postorder_internal (internalTree: 'a binary_tree) (currentList: 'a list): 'a list =
             match internalTree with
             | Empty -> []
-            | Node(value : 'a, left: 'a binary_tree, right: 'a binary_tree) -> postorder_internal left (postorder_internal right (value::currentList))
+            | Node(value : 'a, left: 'a binary_tree, right: 'a binary_tree) ->
+                currentList
+                |> cons value
+                |> postorder_internal right
+                |> postorder_internal left
         match tree with
         | Empty -> []
         | Node(_, _, _) -> postorder_internal tree []
