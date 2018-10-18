@@ -55,17 +55,17 @@ module WorkingWithLists =
     //4
     let length (genericList: 'a list): int =
         let rec tailCall (length: int) (genericList: 'a list): int =
-            match length, genericList with
-            | length, [] -> length
-            | length, (head: 'a)::(tail: 'a list) -> tailCall (length + 1) tail
+            match genericList with
+            | [] -> length
+            | (_)::(tail: 'a list) -> tailCall (length + 1) tail
         tailCall 0 genericList
 
     //5
     let rev (genericList: 'a list): 'a list =
         let rec tailCall (reversed: 'a list) (genericList: 'a list): 'a list =
-            match reversed, genericList with
-            | reversed, [] -> reversed
-            | reversed, (head: 'a)::(tail: 'a list) -> tailCall (head::reversed) tail
+            match genericList with
+            | [] -> reversed
+            | (head: 'a)::(tail: 'a list) -> tailCall (head::reversed) tail
         tailCall [] genericList
 
     //6
@@ -112,11 +112,8 @@ module WorkingWithLists =
         List.foldBack encodeRight genericList []
 
     let decode_list (encoded: (int * 'a) list): 'a list =
-        let rec repeat (count: int, item: 'a) (accumulator: 'a list): 'a list =
-            match count, item, accumulator with
-            | 0, _, accumulator -> accumulator
-            | count, item, accumulator -> repeat (count - 1, item) (item::accumulator)
-        List.foldBack repeat encoded []
+        encoded
+        |> List.collect (fun (count: int, item: 'a) -> List.init count (fun _ -> item))
 
     //12
     let rec decode (encoded: 'a rle list): 'a list =

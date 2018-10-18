@@ -45,9 +45,9 @@
   <Import Project="$(PortableFSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="WorkingWithLists.fs" />
     <None Include="Script.fsx" />
     <Content Include="packages.config" />
+    <Compile Include="WorkingWithLists.fs" />
     <Compile Include="Arithmetic.fs" />
     <Compile Include="LogicAndCodes.fs" />
     <Compile Include="BinaryTrees.fs" />
