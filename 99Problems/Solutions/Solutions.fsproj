@@ -52,6 +52,7 @@
     <Compile Include="LogicAndCodes.fs" />
     <Compile Include="BinaryTrees.fs" />
     <Compile Include="MultiwayTrees.fs" />
+    <Compile Include="Miscellaneous.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
