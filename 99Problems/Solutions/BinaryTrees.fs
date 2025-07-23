@@ -72,6 +72,16 @@ module BinaryTrees =
         | 1 -> Node("x", Empty, Empty)::[]
         | _ -> create_trees_all n
 
+    //60
+    let min_nodes (n: int): int =
+        let rec min_nodes_internal (height: int): int =
+            match height with
+            | 0 -> 0
+            | 1 -> 1
+            | _ -> 1 + (min_nodes_internal (height - 1)) + (min_nodes_internal (height - 2))
+        min_nodes_internal n
+
+
     //61
     let rec count_leaves (tree: 'a binary_tree): int =
         match tree with
@@ -93,6 +103,8 @@ module BinaryTrees =
         | Empty -> []
         | _ -> leaves_internal tree []
 
+    //61B
+
     //62
     let internals (tree: 'a binary_tree): 'a list =
         let rec internals_internal (internalTree: 'a binary_tree) (currentList: 'a list): 'a list =
@@ -113,6 +125,14 @@ module BinaryTrees =
         | Node(value: 'a, _, _), 1 -> value::[]
         | Node(_, left: 'a binary_tree, right: 'a binary_tree), level when level > 1 -> (at_level left (level - 1)) @ (at_level right (level - 1))
         | _ -> []
+
+    //63
+
+    //64
+
+    //65
+
+    //66
 
     //67
     let rec string_of_tree (tree: 'a binary_tree): string =
@@ -166,3 +186,4 @@ module BinaryTrees =
         | Empty -> []
         | Node(_, _, _) -> postorder_internal tree []
 
+    //69

@@ -210,6 +210,10 @@ module WorkingWithLists =
     let rec permutation (genericList: 'a list): 'a list =
         rand_select genericList genericList.Length
 
+    //26
+
+    //27
+
     //28
     let length_sort (genericListOfLists: 'a list list): 'a list list =
         genericListOfLists
