@@ -6,10 +6,40 @@ module MultiwayTrees =
 
     type 'a mult_tree = T of 'a * 'a mult_tree list
 
-    //70C
-    let rec count_nodes (T(_, children): 'a mult_tree): int =
+    //70A
+    let string_of_tree (tree: 'a mult_tree): string =
+        let string_of_tree_internal (builder: StringBuilder) ((node: 'a, children: 'a mult_tree list): 'a mult_tree): string =
+            builder.Append(node.ToString())
+            List.fold (fun (acc, child: 'a mult_tree) -> string_of_tree_internal acc child) builder children
+            builder.Append("^")
+            builder
+        let builder: StringBuilder = StringBuilder()
+        string_of_tree_internal builder tree
+        builder.ToString()
+
+    let tree_of_string (s: string): 'a mult_tree =
+        let rec tree_of_string_internal (stack: 'a mult_tree list) (currentNode: string) (index: int): 'a mult_tree =
+            match index with
+            | i when i >= s.Length -> stack.Head
+            | i when s.[i] = '^' ->
+                let node = T(currentNode, List.rev stack)
+                tree_of_string_internal [] "" (i + 1)
+            | i -> tree_of_string_internal stack (currentNode + s.[i].ToString()) (i + 1)
+        tree_of_string_internal [] "" 0
+
+    //70B
+    let rec count_nodes ((_, children: 'a mult_tree list): 'a mult_tree): int =
         children
         |> List.fold (fun (accumulator: int) (child: 'a mult_tree) -> accumulator + count_nodes child) 1
+
+    //70C
+    let bottom_up (tree: 'a mult_tree): 'a list =
+        let rec bottom_up_internal (stack: 'a list) ((node: 'a, children: 'a mult_tree list): 'a mult_tree): 'a list =
+            List.foldback (fun (child: 'a mult_tree) (acc: 'a list) -> bottom_up_internal acc child) children stack
+            node::stack
+        let stack: 'a list = []
+        bottom_up_internal stack tree
+        stack.ToString()
 
     //71
     let rec ipl (T(_, children): 'a mult_tree): int =

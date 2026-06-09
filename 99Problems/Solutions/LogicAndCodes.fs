@@ -4,17 +4,23 @@ open System
 
 module LogicAndCodes =
 
+    /// <summary>Boolean expression AST.</summary>
     type bool_expr =
     | Var of string
     | Not of bool_expr
     | And of bool_expr * bool_expr
     | Or of bool_expr * bool_expr
 
+    /// <summary>Huffman tree representation with counts.</summary>
     type 'a huffman_tree =
         | Leaf of ('a * int)
         | Internal of int * 'a huffman_tree * 'a huffman_tree
 
-    //46, 47
+    /// <summary>Generates a truth table for two variables and a boolean expression.</summary>
+    /// <param name="variable1">Name of first variable.</param>
+    /// <param name="variable2">Name of second variable.</param>
+    /// <param name="expression">Boolean expression to evaluate.</param>
+    /// <returns>List of triples (v1, v2, result).</returns>
     let table2 (variable1: string) (variable2: string) (expression: bool_expr): (bool * bool * bool) list =
         let rec eval2 (expression: bool_expr) (value1: bool) (value2: bool) =
             let substitute2 (variable: string) =
@@ -30,7 +36,10 @@ module LogicAndCodes =
         [(false, false); (false, true); (true, false); (true, true)]
         |> List.map (fun (input1: bool, input2: bool) -> (input1, input2, eval2 expression input1 input2))
 
-    //48
+    /// <summary>Generates a truth table for an expression given a list of variables.</summary>
+    /// <param name="variables">Ordered list of variable names.</param>
+    /// <param name="expression">Boolean expression to evaluate.</param>
+    /// <returns>List of pairs (assignment list, result).</returns>
     let table (variables: string list) (expression: bool_expr): ((string * bool) list * bool) list =
         let rec createTable (n: int): bool list list =
             let generate (rows: bool list list): bool list list =
@@ -39,7 +48,10 @@ module LogicAndCodes =
                 |> List.foldBack (fun (element: bool list) (accumulator: bool list list) -> (false::element)::accumulator) rows
             match n with
             | 1 -> [[false]; [true]]
-            | n when n > 1 -> n - 1 |> createTable |> generate
+            | n when n > 1 ->
+                n - 1
+                |> createTable
+                |> generate
             | _ -> []
         let rec eval (expression: bool_expr) (values: bool list) =
             let substitute (variable: string) =
@@ -53,7 +65,7 @@ module LogicAndCodes =
         |> createTable
         |> List.map (fun (inputs: bool list) -> (List.map2(fun (variable: string) (input: bool) -> (variable, input)) variables inputs, eval expression inputs))
 
-    //49
+    /// <summary>Generates n-bit Gray codes as strings.</summary>
     let rec gray (n: int): string list =
         let generate (codes: string list) =
             codes
@@ -64,7 +76,9 @@ module LogicAndCodes =
         | n when n > 1 -> n - 1 |> gray |> generate
         | _ -> []
 
-    //50
+    /// <summary>Builds a Huffman code dictionary from (item,frequency) pairs.</summary>
+    /// <param name="frequencies">List of (item, count).</param>
+    /// <returns>List of (item, code) pairs.</returns>
     let huffman (frequencies: ('a * int) list): ('a * string) list =
         let get_count (tree: 'a huffman_tree): int =
             match tree with
