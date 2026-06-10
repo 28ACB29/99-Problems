@@ -10,13 +10,22 @@ module BinaryTrees =
         | Node of 'a * 'a binary_tree * 'a binary_tree
 
     /// <summary>Helper to cons an element to a list.</summary>
+    /// <param name="head">Element to cons.</param>
+    /// <param name="tail">List to append to.</param>
+    /// <returns>New list with head prepended.</returns>
     let cons (head: 'a) (tail: 'a list) = head::tail
 
     /// <summary>Creates trees by pairing left and right subtrees.</summary>
+    /// <param name="leftList">Left subtree candidates.</param>
+    /// <param name="rightList">Right subtree candidates.</param>
+    /// <param name="currentList">Accumulator list.</param>
+    /// <returns>List of constructed trees.</returns>
     let create_trees (leftList: string binary_tree list) (rightList: string binary_tree list) (currentList: string binary_tree list): string binary_tree list =
         List.fold (fun (fullList: string binary_tree list) (leftTree: string binary_tree) -> List.fold (fun (accumulator: string binary_tree list) (rightTree: string binary_tree) -> Node("x", leftTree, rightTree)::accumulator) fullList rightList) currentList leftList
 
     /// <summary>Generates all completely balanced binary trees with <c>n</c> nodes.</summary>
+    /// <param name="n">Number of nodes.</param>
+    /// <returns>List of completely balanced trees with <c>n</c> nodes.</returns>
     let rec cbal_tree (n: int): string binary_tree list =
         let create_trees_even (n_even: int): string binary_tree list =
             let leftList: string binary_tree list = cbal_tree (n_even / 2)
@@ -34,6 +43,8 @@ module BinaryTrees =
         | _ -> []
 
     /// <summary>Determines whether a tree is a mirror of itself (symmetric).</summary>
+    /// <param name="tree">Input binary tree.</param>
+    /// <returns><c>true</c> if tree is symmetric; otherwise <c>false</c>.</returns>
     let is_mirror (tree: 'a binary_tree): bool =
         let rec is_symmetric (leftTree: 'a binary_tree) (righttTree: 'a binary_tree): bool =
             match leftTree, righttTree with
@@ -45,6 +56,8 @@ module BinaryTrees =
         | Node(_, left: 'a binary_tree, right: 'a binary_tree) -> is_symmetric left right
 
     /// <summary>Constructs a binary search tree from a list of values (insertion order).</summary>
+    /// <param name="integers">List of values to insert.</param>
+    /// <returns>Constructed binary search tree.</returns>
     let construct (integers: 'a list): 'a binary_tree =
         let rec insert (number: 'a) (tree: 'a binary_tree) =
             match number, tree with
@@ -56,12 +69,16 @@ module BinaryTrees =
         List.fold (fun accumulator element -> insert element accumulator) Empty integers
 
     /// <summary>Filters balanced trees for symmetry.</summary>
+    /// <param name="n">Number of nodes.</param>
+    /// <returns>List of symmetric balanced trees.</returns>
     let sym_bal_trees (n: int): string binary_tree list =
         n
         |> cbal_tree
         |> List.filter is_mirror
 
     /// <summary>Generates height-balanced trees of height <c>n</c>.</summary>
+    /// <param name="n">Height.</param>
+    /// <returns>List of height-balanced trees.</returns>
     let rec hbal_tree (n: int): string binary_tree list =
         let create_trees_all (height: int): string binary_tree list =
             let largerList: string binary_tree list = hbal_tree (height - 1)
@@ -76,6 +93,8 @@ module BinaryTrees =
         | _ -> create_trees_all n
 
     /// <summary>Minimum number of nodes in a height-balanced tree of height <c>n</c>.</summary>
+    /// <param name="n">Height.</param>
+    /// <returns>Minimum number of nodes.</returns>
     let min_nodes (n: int): int =
         let rec min_nodes_internal (height: int): int =
             match height with
@@ -85,6 +104,8 @@ module BinaryTrees =
         min_nodes_internal n
 
     /// <summary>Counts the leaves in a binary tree.</summary>
+    /// <param name="tree">Input tree.</param>
+    /// <returns>Number of leaf nodes.</returns>
     let rec count_leaves (tree: 'a binary_tree): int =
         match tree with
         | Empty -> 0
@@ -92,6 +113,8 @@ module BinaryTrees =
         | Node(_, left: 'a binary_tree, right: 'a binary_tree) -> (count_leaves left) + (count_leaves right)
 
     /// <summary>Collects the leaves (values of leaf nodes) in left-to-right order.</summary>
+    /// <param name="tree">Input tree.</param>
+    /// <returns>List of leaf values.</returns>
     let leaves (tree: 'a binary_tree): 'a list =
         let rec leaves_internal (internalTree: 'a binary_tree) (currentList: 'a list): 'a list =
             match internalTree with
@@ -106,6 +129,8 @@ module BinaryTrees =
         | _ -> leaves_internal tree []
 
     /// <summary>Returns internal node values (nodes with both children).</summary>
+    /// <param name="tree">Input tree.</param>
+    /// <returns>List of internal node values.</returns>
     let internals (tree: 'a binary_tree): 'a list =
         let rec internals_internal (internalTree: 'a binary_tree) (currentList: 'a list): 'a list =
             match internalTree with
@@ -120,6 +145,9 @@ module BinaryTrees =
         | _ -> []
 
     /// <summary>Returns node values at a given level (1-based).</summary>
+    /// <param name="tree">Input tree.</param>
+    /// <param name="level">Level to collect (1-based).</param>
+    /// <returns>List of values at the level.</returns>
     let rec at_level (tree: 'a binary_tree) (level: int): 'a list =
         match tree, level with
         | Node(value: 'a, _, _), 1 -> value::[]
@@ -127,6 +155,8 @@ module BinaryTrees =
         | _ -> []
 
     /// <summary>Layouts and returns a positioning of nodes (several layout variants implemented).</summary>
+    /// <param name="tree">Input tree.</param>
+    /// <returns>Layouted tree with position annotations (variant-dependent).</returns>
     let layout_binary_tree_1 (tree: 'a binary_tree): ('a * int * int) binary_tree =
         let rec depth (tree: 'a binary_tree): int =
             match tree with
@@ -144,6 +174,8 @@ module BinaryTrees =
         layout_internal tree 0
 
     /// <summary>Alternative layout variant using explicit positions.</summary>
+    /// <param name="tree">Input tree.</param>
+    /// <returns>Tree annotated with (value,level,position) tuples.</returns>
     let layout_binary_tree_2 (tree: 'a binary_tree): ('a * int * int) binary_tree =
         let rec depth (tree: 'a binary_tree): int =
             match tree with
@@ -160,6 +192,8 @@ module BinaryTrees =
         layout_internal tree 1 (1 <<< (left_depth - 1))
 
     /// <summary>Third layout variant (placeholder in this solution).</summary>
+    /// <param name="tree">Input tree.</param>
+    /// <returns>Placeholder empty layout.</returns>
     let layout_binary_tree_3 (tree: 'a binary_tree): ('a * int * int) binary_tree =
         let rec depth (tree: 'a binary_tree): int =
             match tree with
@@ -169,6 +203,8 @@ module BinaryTrees =
         Empty // Placeholder implementation
 
     /// <summary>Serializes tree to a string representation.</summary>
+    /// <param name="tree">Input tree.</param>
+    /// <returns>String representation of the tree.</returns>
     let rec string_of_tree (tree: 'a binary_tree): string =
         let rec string_of_tree_internal (tree: 'a binary_tree): string =
             match tree with
@@ -179,6 +215,8 @@ module BinaryTrees =
         string_of_tree_internal tree
 
     /// <summary>Preorder traversal (root, left, right).</summary>
+    /// <param name="tree">Input tree.</param>
+    /// <returns>List of values in preorder.</returns>
     let preorder (tree: 'a binary_tree): 'a list =
         let rec preorder_internal (internalTree: 'a binary_tree) (currentList: 'a list): 'a list =
             match internalTree with
@@ -193,6 +231,8 @@ module BinaryTrees =
         | Node(_, _, _) -> preorder_internal tree []
 
     /// <summary>Inorder traversal (left, root, right).</summary>
+    /// <param name="tree">Input tree.</param>
+    /// <returns>List of values in inorder.</returns>
     let inorder (tree: 'a binary_tree): 'a list =
         let rec inorder_internal (internalTree: 'a binary_tree) (currentList: 'a list): 'a list =
             match internalTree with
@@ -207,6 +247,8 @@ module BinaryTrees =
         | Node(_, _, _) -> inorder_internal tree []
 
     /// <summary>Postorder traversal (left, right, root).</summary>
+    /// <param name="tree">Input tree.</param>
+    /// <returns>List of values in postorder.</returns>
     let postorder (tree: 'a binary_tree): 'a list =
         let rec postorder_internal (internalTree: 'a binary_tree) (currentList: 'a list): 'a list =
             match internalTree with

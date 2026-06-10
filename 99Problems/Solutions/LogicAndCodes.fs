@@ -66,6 +66,8 @@ module LogicAndCodes =
         |> List.map (fun (inputs: bool list) -> (List.map2(fun (variable: string) (input: bool) -> (variable, input)) variables inputs, eval expression inputs))
 
     /// <summary>Generates n-bit Gray codes as strings.</summary>
+    /// <param name="n">Number of bits.</param>
+    /// <returns>List of Gray code strings.</returns>
     let rec gray (n: int): string list =
         let generate (codes: string list) =
             codes
